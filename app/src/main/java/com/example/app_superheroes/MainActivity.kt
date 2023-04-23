@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,7 +49,8 @@ class MainActivity : AppCompatActivity() {
     private fun searchByName(query: String) {
         binding.progressBar.isVisible = true
         CoroutineScope(Dispatchers.IO).launch {
-            val myResponse: Response<SuperHeroDataResponse> = retrofit.create(ApiService::class.java).getSuperheroes(query)
+            val myResponse: Response<SuperHeroDataResponse> =
+                retrofit.create(ApiService::class.java).getSuperheroes(query)
             if (myResponse.isSuccessful) {
                 Log.i("alexis", "Ya funciona :)")
                 val response: SuperHeroDataResponse? = myResponse.body()
@@ -57,6 +59,11 @@ class MainActivity : AppCompatActivity() {
                     runOnUiThread {
                         adapter.updateList(response.superheroes)
                         binding.progressBar.isVisible = false
+                        Toast.makeText(
+                            applicationContext,
+                            "Búsqueda exitosa!",
+                            Toast.LENGTH_SHORT
+                        ).show();
                     }
                 }
             } else {
